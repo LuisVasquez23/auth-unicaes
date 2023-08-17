@@ -32,11 +32,27 @@ app.use(express.json());
 
 // GET METHODS
 app.get('/', (req, res) => {
-    res.render('index');
+    if (req.session.user) {
+        let user = req.session.user
+        // El usuario ha iniciado sesión, muestra el dashboard
+       res.render('dashboard' , {user});
+    } else {
+        // El usuario no ha iniciado sesión, redireccionar al formulario de inicio de sesión
+        res.render('index');
+    }
+   
 });
 
 app.get('/reconocimiento_facial', (req, res) => {
-    res.render('reconocimiento_facial');
+   
+
+    if (req.session.user) {
+        let user = req.session.user
+        // El usuario ha iniciado sesión, muestra el dashboard
+       res.render('dashboard' , {user});
+    } else {
+        res.render('reconocimiento_facial');
+    }
 });
 
 app.get('/api/users', (req, res) => {
@@ -49,11 +65,16 @@ app.get('/api/users', (req, res) => {
 });
 
 app.post('/reconocimiento_facial', (req, res) => {
-    const usuarioAutenticado = req.body;
-
-    req.session.user = usuarioAutenticado;
-
-    res.redirect('/dashboard');
+    
+    if (req.session.user) {
+        let user = req.session.user
+        // El usuario ha iniciado sesión, muestra el dashboard
+       res.render('dashboard' , {user});
+    } else {
+        const usuarioAutenticado = req.body;
+        req.session.user = usuarioAutenticado;
+        res.redirect('/dashboard');
+    }
 });
 
 // Ruta para el dashboard
