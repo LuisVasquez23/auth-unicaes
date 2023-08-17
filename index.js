@@ -44,8 +44,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/reconocimiento_facial', (req, res) => {
-   
-
     if (req.session.user) {
         let user = req.session.user
         // El usuario ha iniciado sesión, muestra el dashboard
@@ -65,7 +63,6 @@ app.get('/api/users', (req, res) => {
 });
 
 app.post('/reconocimiento_facial', (req, res) => {
-    
     if (req.session.user) {
         let user = req.session.user
         // El usuario ha iniciado sesión, muestra el dashboard
@@ -98,6 +95,30 @@ app.get('/logout', (req, res) => {
         res.redirect('/'); // Redirige a la página de inicio de sesión
       }
     });
+});
+
+app.get('/register', (req, res) => {
+    res.render('register');
+});
+
+app.post('/api/register', (req, res) => {
+    try {
+      const newUser = req.body; // Nuevo usuario enviado en el cuerpo de la solicitud
+  
+      // Leer los usuarios existentes del archivo JSON
+      const usersData = fs.readFileSync('database.json', 'utf8');
+      const users = JSON.parse(usersData);
+  
+      // Agregar el nuevo usuario a la lista de usuarios
+      users.push(newUser);
+  
+      // Guardar la lista actualizada de usuarios en el archivo JSON
+      fs.writeFileSync('database.json', JSON.stringify(users));
+  
+      res.status(201).json({ message: 'Usuario registrado exitosamente' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al registrar el usuario' });
+    }
 });
 
 // Poner a escuchar el servidor en el puerto 3000
