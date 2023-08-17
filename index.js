@@ -86,10 +86,19 @@ app.get('/dashboard', (req, res) => {
        res.render('dashboard' , {user});
     } else {
         // El usuario no ha iniciado sesión, redireccionar al formulario de inicio de sesión
-        res.redirect('/login');
+        res.redirect('/');
     }
 });
 
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+      if (err) {
+        console.log('Error al cerrar sesión:', err);
+      } else {
+        res.redirect('/'); // Redirige a la página de inicio de sesión
+      }
+    });
+});
 
 // Poner a escuchar el servidor en el puerto 3000
 app.listen(PORT, () => {
